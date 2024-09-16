@@ -1,4 +1,6 @@
 ﻿
+using System.Text.RegularExpressions;
+
 namespace Movies.Application.Models;
 
 public class Movie
@@ -10,4 +12,17 @@ public class Movie
     public required int YearOfRelease { get; set; }
 
     public required List<string> Genres { get; init; } = new();
+
+    public string Slug => GenerateSlug();
+
+    private string GenerateSlug()
+    {
+        var sluggedTitle = Regex
+                .Replace(Title, "[^0-9A-Za-z _-]", string.Empty)
+                .ToLower()
+                .Replace(" ", "-");
+        return $"{sluggedTitle}-{YearOfRelease}";
+    }
+
+
 }
