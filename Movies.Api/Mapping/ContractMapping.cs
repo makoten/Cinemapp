@@ -4,6 +4,9 @@ using Movies.Contracts.Responses;
 
 namespace Movies.Api.Mapping
 {
+    /// <summary>
+    /// Class <c>ContractMapping</c> provides methods that convert object types.
+    /// </summary>
     public static class ContractMapping
     {
         public static Movie MapToMovie(this CreateMovieRequest request)

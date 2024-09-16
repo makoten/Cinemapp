@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Movies.Api.Mapping;
-using Movies.Application.Models;
 using Movies.Application.Repositories;
 using Movies.Contracts.Requests;
-using Movies.Contracts.Responses;
-using System.Text.Json;
 
 namespace Movies.Api.Controllers;
 
@@ -19,8 +16,6 @@ public class MovieController : ControllerBase
         _movieRepository = movieRepository;
     }
 
-    // [HttpPost("movies")] is really poorly hardcoded, so I leverage a static function
-    // to centralize the URI declarations
     [HttpPost(ApiEndpoints.Movies.Create)]
     public async Task<IActionResult> Create([FromBody]CreateMovieRequest request)
     {
