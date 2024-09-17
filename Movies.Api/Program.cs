@@ -36,6 +36,10 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddAuthorization(x =>
 {
     x.AddPolicy("Admin", p => p.RequireClaim("admin", "true"));
+    x.AddPolicy("TrustedMember", p => p.RequireAssertion(c =>
+        c.User.HasClaim(m => m is { Type: "admin", Value: "true " }) ||
+        c.User.HasClaim(m => m is { Type: "trusted_member", Value: "true" })
+    ));
 });
 
 builder.Services.AddControllers();
