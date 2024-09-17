@@ -17,3 +17,7 @@ Dapper was used instead of Entity Core. (pending)
 
 ### Movies.Contracts
 To be exported into a Nuget Package as an SDK (pending)
+
+
+### JWT Generation
+For the purposes of Authentication and Authorization, this API only assumes and verifies JSON Web Tokens. It does not generate them!
