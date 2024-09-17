@@ -29,19 +29,19 @@ internal class MovieService : IMovieService
         return _movieRepository.DeleteByIdAsync(id);
     }
 
-    public Task<IEnumerable<Movie>> GetAllAsync()
+    public Task<IEnumerable<Movie>> GetAllAsync(CancellationToken token = default)
     {
-        return _movieRepository.GetAllAsync();
+        return _movieRepository.GetAllAsync(token);
     }
 
-    public Task<Movie?> GetByIdAsync(Guid id)
+    public Task<Movie?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        return _movieRepository.GetByIdAsync(id);
+        return _movieRepository.GetByIdAsync(id, token);
     }
 
-    public Task<Movie?> GetBySlugAsync(string slug)
+    public Task<Movie?> GetBySlugAsync(string slug, CancellationToken token = default)
     {
-        return _movieRepository.GetBySlugAsync(slug);
+        return _movieRepository.GetBySlugAsync(slug, token);
     }
 
     public async Task<Movie?> UpdateAsync(Movie movie)

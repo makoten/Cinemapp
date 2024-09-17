@@ -8,11 +8,11 @@ public interface IMovieService
 {
     Task<bool> CreateAsync(Movie movie);
 
-    Task<Movie?> GetByIdAsync(Guid id);
+    Task<Movie?> GetByIdAsync(Guid id, CancellationToken token);
 
-    Task<Movie?> GetBySlugAsync(string slug);
+    Task<Movie?> GetBySlugAsync(string slug, CancellationToken token);
 
-    Task<IEnumerable<Movie>> GetAllAsync();
+    Task<IEnumerable<Movie>> GetAllAsync(CancellationToken token);
 
     Task<Movie?> UpdateAsync(Movie movie);
 
