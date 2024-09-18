@@ -13,6 +13,10 @@ public class Movie
 
     public required List<string> Genres { get; init; } = new();
 
+    public float? Rating { get; set; }
+
+    public int? UserRating { get; set; }
+
     public string Slug => GenerateSlug();
 
     private string GenerateSlug()

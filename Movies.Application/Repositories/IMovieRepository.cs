@@ -7,15 +7,15 @@ public interface IMovieRepository
 {
     Task<bool> CreateAsync(Movie movie);
 
-    Task<Movie?> GetByIdAsync(Guid id, CancellationToken token);
+    Task<Movie?> GetByIdAsync(Guid id, Guid? userId, CancellationToken token);
 
-    Task<Movie?> GetBySlugAsync(string slug, CancellationToken token);
+    Task<Movie?> GetBySlugAsync(string slug, CancellationToken token, Guid? userId = default);
 
-    Task<IEnumerable<Movie>> GetAllAsync(CancellationToken token);
+    Task<IEnumerable<Movie>> GetAllAsync(Guid? userId, CancellationToken token);
 
     Task<bool> DeleteByIdAsync(Guid id);
 
-    Task<bool> UpdateAsync(Movie movie);
+    Task<bool> UpdateAsync(Movie movie, Guid? userId, CancellationToken token);
 
-    Task<bool> ExistsByIdAsync(Guid id, CancellationToken token);
+    Task<bool> ExistsByIdAsync(Guid id);
 }

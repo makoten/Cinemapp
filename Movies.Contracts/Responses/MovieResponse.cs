@@ -1,6 +1,7 @@
 ﻿
 namespace Movies.Contracts.Responses;
 
+
 public class MovieResponse
 {
     public required Guid Id { get; init; }
@@ -12,4 +13,8 @@ public class MovieResponse
     public required IEnumerable<string> Genres { get; init; } = Enumerable.Empty<string>();
 
     public required string Slug { get; init; }
+
+    public int? UserRating { get; init; }
+
+    public float? Rating { get; init; }
 }

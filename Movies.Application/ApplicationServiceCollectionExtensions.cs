@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Movies.Application.Database;
-using Movies.Application.Models;
 using Movies.Application.Repositories;
 using Movies.Application.Services;
 using Movies.Application.Validators;
@@ -15,6 +14,7 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddSingleton<IMovieRepository, MovieRepository>();
         services.AddSingleton<IMovieService, MovieService>();
+        services.AddSingleton<IRatingRepository, RatingRepository>();
         // Why validators shouldn't be Singleton anymore https://github.com/FluentValidation/FluentValidation/issues/814
         services.AddValidatorsFromAssemblyContaining<MovieValidator>(ServiceLifetime.Transient);
         return services;
