@@ -38,13 +38,20 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Movies.GetAll)]
-    public async Task<IActionResult> GetAll(CancellationToken token)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
-
-        var movies = await movieService.GetAllAsync(token, userId);
-        var moviesResponse = movies.MapToResponse();
-        return Ok(moviesResponse);
+        var options = request.MapToOptions().WithUser(userId);
+        try
+        {
+            var movies = await movieService.GetAllAsync(options, token);
+            var moviesResponse = movies.MapToResponse();
+            return Ok(moviesResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [Authorize("TrustedMember")]

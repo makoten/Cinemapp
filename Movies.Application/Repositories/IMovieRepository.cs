@@ -10,7 +10,7 @@ public interface IMovieRepository
 
     Task<Movie?> GetBySlugAsync(string slug, CancellationToken token, Guid? userId = default);
 
-    Task<IEnumerable<Movie>> GetAllAsync(Guid? userId, CancellationToken token);
+    Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token);
 
     Task<bool> DeleteByIdAsync(Guid id);
 
