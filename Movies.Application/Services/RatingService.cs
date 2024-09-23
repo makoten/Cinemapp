@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using Movies.Application.Models;
 using Movies.Application.Repositories;
 using ValidationException = FluentValidation.ValidationException;
 
@@ -22,5 +23,10 @@ public class RatingService(IRatingRepository ratingRepository, IMovieRepository 
     {
         var movieExists = await movieRepository.ExistsByIdAsync(movieId);
         return movieExists && await ratingRepository.DeleteRatingAsync(movieId, userId, token);
+    }
+
+    public async Task<IEnumerable<MovieRating>> GetRatingsForUserAsync(Guid userId, CancellationToken token = default)
+    {
+        return await ratingRepository.GetRatingsForUserAsync(userId, token);
     }
 }
