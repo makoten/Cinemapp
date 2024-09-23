@@ -60,6 +60,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
             return NotFound();
 
         var response = movie.MapToResponse();
+        // Should I be returning a body here?
         return Ok(response);
     }
 

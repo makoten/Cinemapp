@@ -38,7 +38,7 @@ internal class MovieService(
 
     public async Task<Movie?> UpdateAsync(Movie movie, CancellationToken token, Guid? userId = default)
     {
-        await movieValidator.ValidateAndThrowAsync(movie, cancellationToken: token);
+        await movieValidator.ValidateAndThrowAsync(movie, token);
         var movieExists = await movieRepository.ExistsByIdAsync(movie.Id);
         if (!movieExists)
             return null;

@@ -13,6 +13,7 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddSingleton<IMovieRepository, MovieRepository>();
         services.AddSingleton<IMovieService, MovieService>();
+        services.AddSingleton<IRatingService, RatingService>();
         services.AddSingleton<IRatingRepository, RatingRepository>();
         // Why validators shouldn't be Singleton anymore https://github.com/FluentValidation/FluentValidation/issues/814
         services.AddValidatorsFromAssemblyContaining<MovieValidator>(ServiceLifetime.Transient);
