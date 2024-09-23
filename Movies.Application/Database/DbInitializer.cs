@@ -6,7 +6,6 @@ public class DbInitializer(IDbConnectionFactory dbConnectionFactory)
 {
     public async Task InitializeAsync()
     {
-        // Only opens the connection for initialization
         using var connection = await dbConnectionFactory.CreateConnectionAsync();
 
         await connection.ExecuteAsync("""

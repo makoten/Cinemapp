@@ -22,6 +22,11 @@ internal class MovieService(
         return movieRepository.DeleteByIdAsync(id);
     }
 
+    public Task<int> GetCountAsync(string? title, int? yearOfRelease, CancellationToken token)
+    {
+        return movieRepository.GetCountAsync(title, yearOfRelease, token);
+    }
+
     public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token)
     {
         await optionsValidator.ValidateAndThrowAsync(options, token);

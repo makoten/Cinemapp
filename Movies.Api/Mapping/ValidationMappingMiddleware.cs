@@ -3,20 +3,13 @@ using Movies.Contracts.Responses;
 
 namespace Movies.Api.Mapping;
 
-public class ValidationMappingMiddleware
+public class ValidationMappingMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public ValidationMappingMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
     public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (ValidationException ex)
         {
