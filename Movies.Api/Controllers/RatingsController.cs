@@ -16,4 +16,16 @@ public class RatingsController(IRatingService ratingService) : ControllerBase
         var result = await ratingService.RateMovieAsync(movieId, userId!.Value, request.Rating, token);
         return result ? Ok() : NotFound();
     }
+
+    [Authorize]
+    [HttpDelete(ApiEndpoints.Movies.DeleteRating)]
+    public async Task<IActionResult> DeleteRating([FromRoute] Guid movieId, CancellationToken token)
+    {
+        var userId = HttpContext.GetUserId();
+        var result = await ratingService.DeleteRatingAsync(movieId, userId!.Value, token);
+        if (!result)
+            return NotFound();
+        
+        return NoContent();
+    }
 }

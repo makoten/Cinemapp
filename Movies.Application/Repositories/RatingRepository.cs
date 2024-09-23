@@ -7,7 +7,7 @@ public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatin
 {
     public async Task<bool> RateMovieAsync(Guid movieId, int rating, Guid userId, CancellationToken token = default)
     {
-        var connection = await dbConnectionFactory.CreateConnectionAsync(token);
+        using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         var result = await connection.ExecuteAsync(
             new CommandDefinition("""
                 insert into ratings(movieid, userid, rating) 
@@ -15,6 +15,17 @@ public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatin
                 on conflict (userid, movieid) do update 
                 set rating = @rating
                 """, new { movieId, userId, rating }, cancellationToken: token));
+        return result > 0;
+    }
+
+    public async Task<bool> DeleteRatingAsync(Guid movieId, Guid userId, CancellationToken token)
+    {
+        using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
+        var result = await connection.ExecuteAsync(new CommandDefinition("""
+                delete from ratings
+                where movieid = @movieId and userid = @userId
+            """, new { userId, movieId }, cancellationToken: token));
+
         return result > 0;
     }
 

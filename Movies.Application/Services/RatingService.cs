@@ -17,4 +17,10 @@ public class RatingService(IRatingRepository ratingRepository, IMovieRepository 
         var movieExists = await movieRepository.ExistsByIdAsync(movieId);
         return movieExists && await ratingRepository.RateMovieAsync(movieId, rating, userId, token);
     }
+
+    public async Task<bool> DeleteRatingAsync(Guid movieId, Guid userId, CancellationToken token)
+    {
+        var movieExists = await movieRepository.ExistsByIdAsync(movieId);
+        return movieExists && await ratingRepository.DeleteRatingAsync(movieId, userId, token);
+    }
 }
