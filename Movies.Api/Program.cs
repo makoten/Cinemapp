@@ -4,12 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using Movies.Api.Mapping;
 using Movies.Application;
 using Movies.Application.Database;
+using Movies.Application.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
-
-// Add services to the container.
 
 builder.Services.AddAuthentication(x =>
 {

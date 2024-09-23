@@ -3,18 +3,11 @@ using Movies.Application.Database;
 
 namespace Movies.Application.Repositories;
 
-public class RatingRepository : IRatingRepository
+public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatingRepository
 {
-    private readonly IDbConnectionFactory _dbConnectionFactory;
-
-    public RatingRepository(IDbConnectionFactory dbConnectionFactory)
-    {
-        _dbConnectionFactory = dbConnectionFactory;
-    }
-
     public async Task<float?> GetRatingAsync(Guid movieId, CancellationToken token)
     {
-        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+        using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         return await connection.QuerySingleOrDefaultAsync<float?>(new CommandDefinition("""
             select round(avg(r.rating), 1) from ratings r
             where movieid = @movieId
@@ -24,7 +17,7 @@ public class RatingRepository : IRatingRepository
     public async Task<(float? Rating, int? UserRating)> GetRatingAsync(Guid movieId, Guid? userId,
         CancellationToken token)
     {
-        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+        using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         return await connection.QuerySingleOrDefaultAsync<(float?, int?)>(new CommandDefinition("""
             select round(avg(rating), 1),
                 (select rating
