@@ -26,7 +26,7 @@ public class RatingsController(IRatingService ratingService) : ControllerBase
         var result = await ratingService.DeleteRatingAsync(movieId, userId!.Value, token);
         if (!result)
             return NotFound();
-        
+
         return NoContent();
     }
 

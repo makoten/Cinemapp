@@ -22,7 +22,7 @@ internal class MovieService(
         return movieRepository.DeleteByIdAsync(id);
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token )
+    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token)
     {
         await optionsValidator.ValidateAndThrowAsync(options, token);
         return await movieRepository.GetAllAsync(options, token);
