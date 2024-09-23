@@ -1,4 +1,5 @@
 using System.Text;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Movies.Api.Mapping;
@@ -8,7 +9,7 @@ using Movies.Application.Database;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
-
+ 
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,6 +38,14 @@ builder.Services.AddAuthorization(x =>
         c.User.HasClaim(m => m is { Type: "trusted_member", Value: "true" })
     ));
 });
+
+builder.Services.AddApiVersioning(x =>
+{
+    x.DefaultApiVersion = new ApiVersion(1.0);
+    x.AssumeDefaultVersionWhenUnspecified = true;
+    x.ReportApiVersions = true;
+    x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
+}).AddMvc();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
