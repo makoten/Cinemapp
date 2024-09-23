@@ -1,19 +1,17 @@
-﻿
-using FluentValidation;
+﻿using FluentValidation;
 using Movies.Application.Models;
 using Movies.Application.Repositories;
 
 namespace Movies.Application.Services;
 
-
 internal class MovieService : IMovieService
 {
-
     private readonly IMovieRepository _movieRepository;
     private readonly IValidator<Movie> _movieValidator;
     private readonly IRatingRepository _ratingRepository;
 
-    public MovieService(IMovieRepository movieRepository, IValidator<Movie> movieValidator, IRatingRepository ratingRepository)
+    public MovieService(IMovieRepository movieRepository, IValidator<Movie> movieValidator,
+        IRatingRepository ratingRepository)
     {
         _movieValidator = movieValidator;
         _movieRepository = movieRepository;
@@ -52,7 +50,7 @@ internal class MovieService : IMovieService
         var movieExists = await _movieRepository.ExistsByIdAsync(movie.Id);
         if (!movieExists)
             return null;
-        
+
         await _movieRepository.UpdateAsync(movie, userId, token);
 
         if (!userId.HasValue)
@@ -67,7 +65,5 @@ internal class MovieService : IMovieService
         movie.UserRating = ratings.UserRating;
 
         return movie;
-
     }
-
 }

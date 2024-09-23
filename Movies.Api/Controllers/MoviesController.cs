@@ -7,11 +7,10 @@ using Movies.Contracts.Requests;
 
 namespace Movies.Api.Controllers;
 
-
 [ApiController]
 public class MoviesController : ControllerBase
 {
-    private IMovieService _movieService;
+    private readonly IMovieService _movieService;
 
     public MoviesController(IMovieService movieService)
     {
@@ -20,7 +19,7 @@ public class MoviesController : ControllerBase
 
     [Authorize("TrustedMember")]
     [HttpPost(ApiEndpoints.Movies.Create)]
-    public async Task<IActionResult> Create([FromBody]CreateMovieRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateMovieRequest request)
     {
         var movie = request.MapToMovie();
         await _movieService.CreateAsync(movie);
@@ -29,7 +28,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Movies.Get)]
-    public async Task<IActionResult> Get([FromRoute]string idOrSlug, CancellationToken token)
+    public async Task<IActionResult> Get([FromRoute] string idOrSlug, CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
 
@@ -57,7 +56,8 @@ public class MoviesController : ControllerBase
 
     [Authorize("TrustedMember")]
     [HttpPut(ApiEndpoints.Movies.Update)]
-    public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]UpdateMovieRequest request, CancellationToken token)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateMovieRequest request,
+        CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
         var movie = request.MapToMovie(id);
@@ -72,7 +72,7 @@ public class MoviesController : ControllerBase
 
     [Authorize("Admin")]
     [HttpDelete(ApiEndpoints.Movies.Delete)]
-    public async Task<IActionResult> Delete([FromRoute]Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var isDeleted = await _movieService.DeleteByIdAsync(id);
         if (!isDeleted)

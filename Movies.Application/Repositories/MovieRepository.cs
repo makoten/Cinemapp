@@ -4,10 +4,8 @@ using Movies.Application.Models;
 
 namespace Movies.Application.Repositories;
 
-
 public class MovieRepository : IMovieRepository
 {
-
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
     public MovieRepository(IDbConnectionFactory dbConnectionFactory)
@@ -18,13 +16,13 @@ public class MovieRepository : IMovieRepository
     public async Task<bool> CreateAsync(Movie movie)
     {
         var movieCreationSql = """
-            insert into movies (id, slug, title, yearofrelease)
-            values (@Id, @Slug, @Title, @YearOfRelease)
-            """;
+                               insert into movies (id, slug, title, yearofrelease)
+                               values (@Id, @Slug, @Title, @YearOfRelease)
+                               """;
         var genreCreationSql = """
-                    insert into genres (movieId, name)
-                    values (@MovieId, @Name)
-                    """;
+                               insert into genres (movieId, name)
+                               values (@MovieId, @Name)
+                               """;
 
         var result = 0;
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
@@ -32,16 +30,12 @@ public class MovieRepository : IMovieRepository
 
         try
         {
-
             result = await connection.ExecuteAsync(movieCreationSql, movie, transaction);
 
             if (result > 0)
-            {
                 foreach (var genre in movie.Genres)
-                {
-                    await connection.ExecuteAsync(genreCreationSql, new { MovieId = movie.Id, Name = genre }, transaction);
-                }
-            }
+                    await connection.ExecuteAsync(genreCreationSql, new { MovieId = movie.Id, Name = genre },
+                        transaction);
 
             transaction.Commit();
         }
@@ -61,17 +55,17 @@ public class MovieRepository : IMovieRepository
         using var transaction = connection.BeginTransaction();
 
         var getMovieSql = """
-            select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
-            from movies m
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            where id = @id
-            group by id, userrating
-            """;
+                          select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                          from movies m
+                          left join ratings r on m.id = r.movieid
+                          left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                          where id = @id
+                          group by id, userrating
+                          """;
         var getGenresSql = """
-            select name from genres
-            where movieId = @id
-            """;
+                           select name from genres
+                           where movieId = @id
+                           """;
         Movie? movie = null;
         try
         {
@@ -82,10 +76,7 @@ public class MovieRepository : IMovieRepository
 
             var genres = await connection.QueryAsync<string>(
                 new CommandDefinition(getGenresSql, new { id }, transaction, cancellationToken: token));
-            foreach (var genre in genres)
-            {
-                movie.Genres.Add(genre);
-            }
+            foreach (var genre in genres) movie.Genres.Add(genre);
         }
         catch (Exception e)
         {
@@ -106,14 +97,14 @@ public class MovieRepository : IMovieRepository
         try
         {
             await connection.ExecuteAsync("""
-                delete from genres
-                where movieId = @id
-                """, new { id }, transaction);
+                                          delete from genres
+                                          where movieId = @id
+                                          """, new { id }, transaction);
 
             result = await connection.ExecuteAsync("""
-                delete from movies
-                where id = @id
-                """, new { id }, transaction);
+                                                   delete from movies
+                                                   where id = @id
+                                                   """, new { id }, transaction);
         }
         catch (Exception e)
         {
@@ -129,16 +120,16 @@ public class MovieRepository : IMovieRepository
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
         var result = await connection.QueryAsync(new CommandDefinition("""
-            select m.*, 
-                string_agg(distinct g.name, ',') as genres, 
-                round(avg(r.rating), 1) as rating,
-                myr.rating as userrating
-            from movies m 
-            left join genres g on m.id = g.movieid
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            group by id, userrating
-            """, new { userId }, cancellationToken: token));
+                                                                       select m.*, 
+                                                                           string_agg(distinct g.name, ',') as genres, 
+                                                                           round(avg(r.rating), 1) as rating,
+                                                                           myr.rating as userrating
+                                                                       from movies m 
+                                                                       left join genres g on m.id = g.movieid
+                                                                       left join ratings r on m.id = r.movieid
+                                                                       left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                                                                       group by id, userrating
+                                                                       """, new { userId }, cancellationToken: token));
 
         return result.Select(x => new Movie
         {
@@ -146,8 +137,8 @@ public class MovieRepository : IMovieRepository
             Title = x.title,
             YearOfRelease = x.yearofrelease,
             Genres = Enumerable.ToList(x.genres.Split(',')),
-            Rating = (float?) x.rating,
-            UserRating = (int?) x.userrating
+            Rating = (float?)x.rating,
+            UserRating = (int?)x.userrating
         });
     }
 
@@ -157,17 +148,17 @@ public class MovieRepository : IMovieRepository
         using var transaction = connection.BeginTransaction();
 
         var getMovieSql = """
-            select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
-            from movies m
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            where slug = @slug
-            group by id, userrating
-            """;
+                          select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                          from movies m
+                          left join ratings r on m.id = r.movieid
+                          left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                          where slug = @slug
+                          group by id, userrating
+                          """;
         var getGenresSql = """
-            select name from genres
-            where movieId = @id
-            """;
+                           select name from genres
+                           where movieId = @id
+                           """;
         Movie? movie = null;
         try
         {
@@ -178,10 +169,7 @@ public class MovieRepository : IMovieRepository
 
             var genres = await connection.QueryAsync<string>(
                 new CommandDefinition(getGenresSql, new { id = movie.Id }, transaction, cancellationToken: token));
-            foreach (var genre in genres)
-            {
-                movie.Genres.Add(genre);
-            }
+            foreach (var genre in genres) movie.Genres.Add(genre);
         }
         catch (Exception e)
         {
@@ -200,23 +188,21 @@ public class MovieRepository : IMovieRepository
         try
         {
             await connection.ExecuteAsync("""
-            delete from genres where movieid = @id
-            """, new { id = movie.Id }, transaction);
+                                          delete from genres where movieid = @id
+                                          """, new { id = movie.Id }, transaction);
 
             foreach (var genre in movie.Genres)
-            {
                 await connection.ExecuteAsync("""
-                insert into genres (movieId, name)
-                values (@MovieId, @Name)
-                """, new { MovieId = movie.Id, Name = genre }, transaction);
-            }
+                                              insert into genres (movieId, name)
+                                              values (@MovieId, @Name)
+                                              """, new { MovieId = movie.Id, Name = genre }, transaction);
 
             result = await connection.ExecuteAsync("""
-                update movies set slug = @Slug,
-                title = @Title,
-                yearofrelease = @YearOfRelease
-                where id = @Id
-                """, movie, transaction);
+                                                   update movies set slug = @Slug,
+                                                   title = @Title,
+                                                   yearofrelease = @YearOfRelease
+                                                   where id = @Id
+                                                   """, movie, transaction);
         }
         catch (Exception e)
         {
@@ -236,5 +222,4 @@ public class MovieRepository : IMovieRepository
         );
         return result;
     }
-
 }

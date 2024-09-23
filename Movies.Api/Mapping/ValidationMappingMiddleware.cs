@@ -11,6 +11,7 @@ public class ValidationMappingMiddleware
     {
         _next = next;
     }
+
     public async Task InvokeAsync(HttpContext context)
     {
         try

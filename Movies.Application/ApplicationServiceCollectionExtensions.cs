@@ -7,7 +7,6 @@ using Movies.Application.Validators;
 
 namespace Movies.Application;
 
-
 public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)

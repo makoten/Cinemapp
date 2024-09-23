@@ -1,7 +1,7 @@
 ﻿namespace Movies.Api;
 
 /// <summary>
-/// Class <c>ApiEndpoints</c> centralizes URI definitions by providing constants, to make for ease of adjustments.
+///     Class <c>ApiEndpoints</c> centralizes URI definitions by providing constants, to make for ease of adjustments.
 /// </summary>
 public static class ApiEndpoints
 {

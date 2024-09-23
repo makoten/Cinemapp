@@ -1,8 +1,6 @@
-﻿
-using Movies.Application.Models;
+﻿using Movies.Application.Models;
 
 namespace Movies.Application.Services;
-
 
 public interface IMovieService
 {

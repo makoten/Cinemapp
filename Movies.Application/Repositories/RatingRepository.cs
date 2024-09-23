@@ -21,7 +21,8 @@ public class RatingRepository : IRatingRepository
             """, new { movieId }, cancellationToken: token));
     }
 
-    public async Task<(float? Rating, int? UserRating)> GetRatingAsync(Guid movieId, Guid? userId, CancellationToken token)
+    public async Task<(float? Rating, int? UserRating)> GetRatingAsync(Guid movieId, Guid? userId,
+        CancellationToken token)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
         return await connection.QuerySingleOrDefaultAsync<(float?, int?)>(new CommandDefinition("""
@@ -33,6 +34,6 @@ public class RatingRepository : IRatingRepository
                 limit 1)
             from ratings
             where movieid = @movieid
-            """, new {movieId, userId }, cancellationToken: token));
+            """, new { movieId, userId }, cancellationToken: token));
     }
 }
