@@ -11,11 +11,11 @@ public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatin
         using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         var result = await connection.ExecuteAsync(
             new CommandDefinition("""
-                insert into ratings(movieid, userid, rating) 
-                values (@movieId, @userId, @rating) 
-                on conflict (userid, movieid) do update 
-                set rating = @rating
-                """, new { movieId, userId, rating }, cancellationToken: token));
+                                  insert into ratings(movieid, userid, rating) 
+                                  values (@movieId, @userId, @rating) 
+                                  on conflict (userid, movieid) do update 
+                                  set rating = @rating
+                                  """, new { movieId, userId, rating }, cancellationToken: token));
         return result > 0;
     }
 
@@ -23,9 +23,10 @@ public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatin
     {
         using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         var result = await connection.ExecuteAsync(new CommandDefinition("""
-                delete from ratings
-                where movieid = @movieId and userid = @userId
-            """, new { userId, movieId }, cancellationToken: token));
+                                                                             delete from ratings
+                                                                             where movieid = @movieId and userid = @userId
+                                                                         """, new { userId, movieId },
+            cancellationToken: token));
 
         return result > 0;
     }
@@ -59,10 +60,11 @@ public class RatingRepository(IDbConnectionFactory dbConnectionFactory) : IRatin
     {
         using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         return await connection.QueryAsync<MovieRating>(new CommandDefinition("""
-            select r.rating, r.movieid, m.slug
-            from ratings r 
-            inner join movies m on r.movieid = m.id
-            where userid = @userId
-            """, new { userId }, cancellationToken: token));
+                                                                              select r.rating, r.movieid, m.slug
+                                                                              from ratings r 
+                                                                              inner join movies m on r.movieid = m.id
+                                                                              where userid = @userId
+                                                                              """, new { userId },
+            cancellationToken: token));
     }
 }

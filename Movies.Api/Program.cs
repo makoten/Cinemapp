@@ -10,7 +10,7 @@ using Movies.Application.Database;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
- 
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,17 +51,9 @@ builder.Services.AddApiVersioning(x =>
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// this logic should live in the Application layer for decoupling
-//builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
-// Instead, created an extension method
-builder.Services.AddApplication();
-builder.Services.AddDatabase(config["Database:ConnectionString"]!);
-
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         In = ParameterLocation.Header,
@@ -85,6 +77,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// this logic should live in the Application layer for decoupling
+//builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
+// Instead, created an extension method
+builder.Services.AddApplication();
+builder.Services.AddDatabase(config["Database:ConnectionString"]!);
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -92,7 +91,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 
 // Configure the HTTP request pipeline.

@@ -9,13 +9,13 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
     public async Task<bool> CreateAsync(Movie movie)
     {
         var movieCreationSql = """
-            insert into movies (id, slug, title, yearofrelease)
-            values (@Id, @Slug, @Title, @YearOfRelease)
-            """;
+                               insert into movies (id, slug, title, yearofrelease)
+                               values (@Id, @Slug, @Title, @YearOfRelease)
+                               """;
         var genreCreationSql = """
-            insert into genres (movieId, name)
-            values (@MovieId, @Name)
-            """;
+                               insert into genres (movieId, name)
+                               values (@MovieId, @Name)
+                               """;
 
         var result = 0;
         using var connection = await dbConnectionFactory.CreateConnectionAsync();
@@ -48,17 +48,17 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
         using var transaction = connection.BeginTransaction();
 
         var getMovieSql = """
-            select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
-            from movies m
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            where id = @id
-            group by id, userrating
-            """;
+                          select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                          from movies m
+                          left join ratings r on m.id = r.movieid
+                          left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                          where id = @id
+                          group by id, userrating
+                          """;
         var getGenresSql = """
-            select name from genres
-            where movieId = @id
-            """;
+                           select name from genres
+                           where movieId = @id
+                           """;
         Movie? movie = null;
         try
         {
@@ -90,14 +90,14 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
         try
         {
             await connection.ExecuteAsync("""
-                delete from genres
-                where movieId = @id
-                """, new { id }, transaction);
+                                          delete from genres
+                                          where movieId = @id
+                                          """, new { id }, transaction);
 
             result = await connection.ExecuteAsync("""
-                delete from movies
-                where id = @id
-                """, new { id }, transaction);
+                                                   delete from movies
+                                                   where id = @id
+                                                   """, new { id }, transaction);
         }
         catch (Exception e)
         {
@@ -117,25 +117,25 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
         if (options.SortField is not null)
             // this gets validated before this point, no fear of SQL injection attack
             orderClause = $"""
-                    ,m.{options.SortField} 
-                    order by m.{options.SortField} {(options.SortOrder == SortOrder.Descending ? "desc" : "asc")}
-                """;
+                               ,m.{options.SortField} 
+                               order by m.{options.SortField} {(options.SortOrder == SortOrder.Descending ? "desc" : "asc")}
+                           """;
 
         var result = await connection.QueryAsync(new CommandDefinition($"""
-            select m.*, 
-                string_agg(distinct g.name, ',') as genres, 
-                round(avg(r.rating), 1) as rating,
-                myr.rating as userrating
-            from movies m 
-            left join genres g on m.id = g.movieid
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            where (@title is null or m.title like ('%' || @title || '%'))
-            and (@yearofrelease is null or m.yearofrelease = @yearofrelease)
-            group by id, userrating {orderClause}
-            limit @pageSize
-            offset @pageOffset
-            """, new
+                                                                        select m.*, 
+                                                                            string_agg(distinct g.name, ',') as genres, 
+                                                                            round(avg(r.rating), 1) as rating,
+                                                                            myr.rating as userrating
+                                                                        from movies m 
+                                                                        left join genres g on m.id = g.movieid
+                                                                        left join ratings r on m.id = r.movieid
+                                                                        left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                                                                        where (@title is null or m.title like ('%' || @title || '%'))
+                                                                        and (@yearofrelease is null or m.yearofrelease = @yearofrelease)
+                                                                        group by id, userrating {orderClause}
+                                                                        limit @pageSize
+                                                                        offset @pageOffset
+                                                                        """, new
         {
             userId = options.UserId,
             title = options.Title,
@@ -161,17 +161,17 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
         using var transaction = connection.BeginTransaction();
 
         var getMovieSql = """
-            select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
-            from movies m
-            left join ratings r on m.id = r.movieid
-            left join ratings myr on m.id = myr.movieid and myr.userid = @userId
-            where slug = @slug
-            group by id, userrating
-            """;
+                          select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                          from movies m
+                          left join ratings r on m.id = r.movieid
+                          left join ratings myr on m.id = myr.movieid and myr.userid = @userId
+                          where slug = @slug
+                          group by id, userrating
+                          """;
         var getGenresSql = """
-            select name from genres
-            where movieId = @id
-            """;
+                           select name from genres
+                           where movieId = @id
+                           """;
         Movie? movie = null;
         try
         {
@@ -201,21 +201,21 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
         try
         {
             await connection.ExecuteAsync("""
-                delete from genres where movieid = @id
-                """, new { id = movie.Id }, transaction);
+                                          delete from genres where movieid = @id
+                                          """, new { id = movie.Id }, transaction);
 
             foreach (var genre in movie.Genres)
                 await connection.ExecuteAsync("""
-                    insert into genres (movieId, name)
-                    values (@MovieId, @Name)
-                    """, new { MovieId = movie.Id, Name = genre }, transaction);
+                                              insert into genres (movieId, name)
+                                              values (@MovieId, @Name)
+                                              """, new { MovieId = movie.Id, Name = genre }, transaction);
 
             result = await connection.ExecuteAsync("""
-                update movies set slug = @Slug,
-                title = @Title,
-                yearofrelease = @YearOfRelease
-                where id = @Id
-                """, movie, transaction);
+                                                   update movies set slug = @Slug,
+                                                   title = @Title,
+                                                   yearofrelease = @YearOfRelease
+                                                   where id = @Id
+                                                   """, movie, transaction);
         }
         catch (Exception e)
         {
@@ -241,10 +241,10 @@ public class MovieRepository(IDbConnectionFactory dbConnectionFactory) : IMovieR
     {
         using var connection = await dbConnectionFactory.CreateConnectionAsync(token);
         return await connection.QuerySingleAsync<int>(new CommandDefinition("""
-                select count(id) from movies
-                where (@title is null or title like ('%' || @title || '%'))
-                and (@yearOfRelease is null or yearofrelease = @yearOfRelease)
-            """, new
+                                                                                select count(id) from movies
+                                                                                where (@title is null or title like ('%' || @title || '%'))
+                                                                                and (@yearOfRelease is null or yearofrelease = @yearOfRelease)
+                                                                            """, new
         {
             title,
             yearOfRelease
