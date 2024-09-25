@@ -26,13 +26,13 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Movies.Get)]
+    [ResponseCache(Duration = 30, VaryByQueryKeys = ["title", "year", "sortBy", "page", "pageSize"], VaryByHeader = "Accept, Accept-Encoding", Location = ResponseCacheLocation.Any)]
     [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetV1([FromRoute] string idOrSlug, CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
-
-
+         
         var movie = Guid.TryParse(idOrSlug, out var id)
             ? await movieService.GetByIdAsync(id, token, userId)
             : await movieService.GetBySlugAsync(idOrSlug, token, userId);
@@ -45,6 +45,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Movies.GetAll)]
+    [ResponseCache(Duration = 30, VaryByQueryKeys = ["title", "year", "sortBy", "page", "pageSize"], VaryByHeader = "Accept, Accept-Encoding", Location = ResponseCacheLocation.Any)]
     [ProducesResponseType(typeof(MoviesResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
     {
