@@ -21,7 +21,7 @@ public static class ApiEndpoints
 
         public const string Delete = $"{Base}/{{id:guid}}";
 
-        public const string Rate = $"{Base}/{{movieID:guid}}/ratings";
+        public const string Rate = $"{Base}/{{movieId:guid}}/ratings";
 
         public const string DeleteRating = $"{Base}/{{movieId:guid}}/ratings";
     }
