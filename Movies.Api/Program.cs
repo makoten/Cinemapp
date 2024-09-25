@@ -48,7 +48,9 @@ builder.Services.AddApiVersioning(x =>
 }).AddMvc();
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // this logic should live in the Application layer for decoupling
 //builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
@@ -57,6 +59,12 @@ builder.Services.AddApplication();
 builder.Services.AddDatabase(config["Database:ConnectionString"]!);
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 
