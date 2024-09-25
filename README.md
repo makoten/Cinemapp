@@ -6,10 +6,17 @@
 
 A RESTful API made with C# and love!
 
+## Features
+- Ability to CRUD Movies and Movie Ratings (authentication may be required)
+- Dockerized PostgreSQL
+- JWT Authentication and Authorization
+- Documented Swagger
+- Health check
+
 ## Design Decisions & features
 
 ### Movies.Api
-Contains all public-facing endpoints, and related functionality (mappings, etc.)
+CRUD for Movies and Ratings
 
 ### Movies.Application
 Business Logic and Repositories. 
