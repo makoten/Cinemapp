@@ -3,6 +3,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Movies.Api.Health;
 using Movies.Api.Mapping;
 using Movies.Application;
 using Movies.Application.Database;
@@ -50,6 +51,8 @@ builder.Services.AddApiVersioning(x =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("Database");
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -92,8 +95,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-// Configure the HTTP request pipeline.
+app.MapHealthChecks("_health");
 
 app.UseHttpsRedirection();
 
