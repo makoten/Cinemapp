@@ -19,12 +19,10 @@ A RESTful API made with C# and love!
 CRUD for Movies and Ratings
 
 ### Movies.Application
-Business Logic and Repositories. 
-Dapper was used instead of Entity Core. (pending)
+Business Logic and Repositories. Uses Dapper for ORM.
 
 ### Movies.Contracts
-To be exported into a Nuget Package as an SDK (pending)
-
+To be exported into a Nuget Package as an SDK.
 
 ### JWT Generation
 For the purposes of Authentication and Authorization, this API only assumes and verifies JSON Web Tokens. It does not generate them!
